@@ -14,6 +14,8 @@ namespace ELibrary.Web
             builder.Services.AddApplicationIdentity();
 
             builder.Services.AddApplicationServices();
+
+            builder.Services.AddAutoMapper(typeof(Program));
             
             // Add services to the container.
             builder.Services.AddControllersWithViews(options =>
@@ -42,6 +44,8 @@ namespace ELibrary.Web
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.MapRazorPages();
 
             app.Run();
         }
