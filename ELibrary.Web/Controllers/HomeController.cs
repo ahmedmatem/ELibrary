@@ -8,11 +8,9 @@ namespace ELibrary.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IResourceService rs;
 
-        public HomeController(ILogger<HomeController> logger, IResourceService rs)
+        public HomeController(ILogger<HomeController> logger)
         {
-            this.rs = rs;
             _logger = logger;
         }
 
