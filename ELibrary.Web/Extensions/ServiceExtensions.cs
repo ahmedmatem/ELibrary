@@ -1,4 +1,5 @@
 ﻿using Azure.Storage.Blobs;
+using ELibrary.Core.Services;
 using ELibrary.Infrastructure.Data;
 using ELibrary.Infrastructure.Data.Repository;
 using Microsoft.AspNetCore.Identity;
@@ -20,7 +21,7 @@ namespace ELibrary.Web.Extensions
         /// </remarks>
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            
+            services.AddScoped<ELibrary.Core.Services.ResourceService, ResourceService>();
 
             return services;
         }

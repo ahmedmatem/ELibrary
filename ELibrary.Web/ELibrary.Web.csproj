@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ELibrary.Application\ELibrary.Core.csproj" />
+    <ProjectReference Include="..\ELibrary.Core\ELibrary.Core.csproj" />
   </ItemGroup>
 
 </Project>

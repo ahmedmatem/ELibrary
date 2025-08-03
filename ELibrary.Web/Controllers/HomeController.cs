@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using ELibrary.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -7,9 +8,11 @@ namespace ELibrary.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IResourceService rs;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IResourceService rs)
         {
+            this.rs = rs;
             _logger = logger;
         }
 
