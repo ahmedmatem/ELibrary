@@ -1,4 +1,5 @@
-﻿using ELibrary.Infrastructure.Data;
+﻿using Azure.Storage.Blobs;
+using ELibrary.Infrastructure.Data;
 using ELibrary.Infrastructure.Data.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,10 @@ namespace ELibrary.Web.Extensions
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            // Register a singleton Azure BlobServiceClient using the connection string from configuration.
+            // This client is used to interact with Azure Blob Storage throughout the application.
+            services.AddSingleton(x => new BlobServiceClient(configuration.GetValue<string>("ConnectionStrings:AzureBlobStorageConnection")));
 
             services.AddScoped<IRepository, Repository>();
 
