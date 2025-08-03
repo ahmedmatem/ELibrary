@@ -10,4 +10,10 @@
     <ProjectReference Include="..\ELibrary.Infrastructure\ELibrary.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contracts\" />
+    <Folder Include="DTOs\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
