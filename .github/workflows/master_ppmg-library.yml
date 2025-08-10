@@ -35,6 +35,21 @@ jobs:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
 
+      # Run EF Core migrations against Azure SQL
+      - name: Update database (EF Core)
+        shell: pwsh
+        env:
+          ConnectionStrings__DefaultConnection: ${{ secrets.SQL_CONNECTION }}
+        run: |
+          dotnet tool install --global dotnet-ef
+          $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
+          # If your DbContext/Migrations live in the web project, point both to it.
+          # Otherwise set --project to the Migrations project and --startup-project to your web app.
+          dotnet ef database update `
+            --project src\ELibrary.Core\ELibrary.Core.csproj `
+            --startup-project src\ELibrary.Web\ELibrary.Web.csproj `
+            --verbose
+
   deploy:
     runs-on: windows-latest
     needs: build
@@ -62,4 +77,5 @@ jobs:
           app-name: 'ppmg-library'
           slot-name: 'Production'
           package: .
+
           
