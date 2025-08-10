@@ -55,12 +55,19 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_0EA4A7D718394834A9265491F09CC660 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_BED382A2823A49869C8C72BB5F5169B9 }}
 
+      # (Optional) sanity check the paths so you know what to put below
+      - name: List project files
+        shell: pwsh
+        run: |
+          echo "Current dir: $pwd"
+          Get-ChildItem -Recurse -Filter *.csproj | Select-Object FullName
+
       - name: Update database (EF Core migrations)
         shell: pwsh
         env:
           ConnectionStrings__DefaultConnection: ${{ secrets.SQL_CONNECTION }}
         run: |
-          dotnet tool install --global dotnet-ef
+          dotnet tool install --global dotnet-ef --version 8.*
           $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
           dotnet ef database update `
             --project src\ELibrary.Core\ELibrary.Core.csproj `
@@ -75,5 +82,6 @@ jobs:
           package: .
 
           
+
 
 
