@@ -55,23 +55,38 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_0EA4A7D718394834A9265491F09CC660 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_BED382A2823A49869C8C72BB5F5169B9 }}
 
-      # (Optional) sanity check the paths so you know what to put below
-      - name: List project files
-        shell: pwsh
-        run: |
-          echo "Current dir: $pwd"
-          Get-ChildItem -Recurse -Filter *.csproj | Select-Object FullName
-
-      - name: Update database (EF Core migrations)
+      - name: Update database (EF Core)
         shell: pwsh
         env:
           ConnectionStrings__DefaultConnection: ${{ secrets.SQL_CONNECTION }}
         run: |
           dotnet tool install --global dotnet-ef --version 8.*
           $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
-          dotnet ef database update `
-            --project src\ELibrary.Core\ELibrary.Core.csproj `
-            --startup-project src\ELibrary.Web\ELibrary.Web.csproj
+      
+          # Find the project that contains the Migrations folder (first match)
+          $migrationsProj = (Get-ChildItem -Recurse -Filter *.csproj |
+            Where-Object { Test-Path (Join-Path $_.DirectoryName 'Migrations') } |
+            Select-Object -First 1 -ExpandProperty FullName)
+      
+          if (-not $migrationsProj) {
+            Write-Error "Could not find a project that contains a 'Migrations' folder."
+            exit 1
+          }
+      
+          # Find the web startup project (has Program.cs in same folder)
+          $startupProj = (Get-ChildItem -Recurse -Filter Program.cs |
+            ForEach-Object { $_.Directory.GetFiles('*.csproj') } |
+            Select-Object -First 1 -ExpandProperty FullName)
+      
+          if (-not $startupProj) {
+            Write-Error "Could not find a startup project (folder with Program.cs and a .csproj)."
+            exit 1
+          }
+      
+          Write-Host "Using --project       = $migrationsProj"
+          Write-Host "Using --startup-project = $startupProj"
+      
+          dotnet ef database update --project "$migrationsProj" --startup-project "$startupProj" --verbose
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -82,6 +97,7 @@ jobs:
           package: .
 
           
+
 
 
 
