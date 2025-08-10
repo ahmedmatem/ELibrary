@@ -55,6 +55,17 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_0EA4A7D718394834A9265491F09CC660 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_BED382A2823A49869C8C72BB5F5169B9 }}
 
+      - name: Update database (EF Core migrations)
+        shell: pwsh
+        env:
+          ConnectionStrings__DefaultConnection: ${{ secrets.SQL_CONNECTION }}
+        run: |
+          dotnet tool install --global dotnet-ef
+          $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
+          dotnet ef database update `
+            --project src\ELibrary.Core\ELibrary.Core.csproj `
+            --startup-project src\ELibrary.Web\ELibrary.Web.csproj
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
@@ -64,4 +75,5 @@ jobs:
           package: .
 
           
+
 
