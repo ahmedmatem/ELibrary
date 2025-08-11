@@ -38,7 +38,11 @@ jobs:
       - name: Run EF Core Migrations
         env:
           CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
-        run: dotnet ef database update --connection "$CONNECTION_STRING"
+        run: >
+          dotnet ef database update 
+          --connection "$env:CONNECTION_STRING"
+          --project ./src/ELibrary.Infrastructure/ELibrary.Infrastructure.csproj
+          --startup-project ./src/ELibrary.Web/ELibrary.Web.csproj
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -75,4 +79,5 @@ jobs:
           package: .
 
           
+
 
