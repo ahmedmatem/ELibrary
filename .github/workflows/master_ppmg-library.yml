@@ -29,6 +29,11 @@ jobs:
       - name: dotnet publish
         run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
+      - name: Run EF Core Migrations
+        env:
+          CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+        run: dotnet ef database update --connection "$CONNECTION_STRING"
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -62,4 +67,5 @@ jobs:
           app-name: 'ppmg-library'
           slot-name: 'Production'
           package: .
+
           
