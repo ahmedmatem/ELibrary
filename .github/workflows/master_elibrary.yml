@@ -23,8 +23,26 @@ jobs:
         with:
           dotnet-version: '8.x'
 
+      - name: Restore dependencies
+        run: dotnet restore
+
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Install EF Core CLI
+        run: dotnet tool install --global dotnet-ef
+
+      - name: Add dotnet tools to PATH
+        run: echo "$env:USERPROFILE\\.dotnet\\tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+
+      - name: Run EF Core migrations on Azure SQL
+        env:
+          CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+        run: >
+          dotnet ef database update
+          --connection "$env:CONNECTION_STRING"
+          --project ./src/ELibrary.Infrastructure/ELibrary.Infrastructure.csproj
+          --startup-project ./src/ELibrary.Web/ELibrary.Web.csproj
 
       - name: dotnet publish
         run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
@@ -62,4 +80,5 @@ jobs:
           app-name: 'elibrary'
           slot-name: 'Production'
           package: .
+
           
