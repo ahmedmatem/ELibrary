@@ -31,8 +31,15 @@ jobs:
 
       - name: Restore Tools
         run: dotnet tool restore
+
+      - name: Install EF Core CLI
+        run: dotnet tool install --global dotnet-ef
+      
+      - name: Add dotnet tools to PATH
+        run: echo "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+        
       - name: Build Bundle
-        run: dotnet dotnet-ef migrations bundle --self-contained --force
+        run: dotnet ef migrations bundle --self-contained --force
         working-directory: ./ELibrary.Infrastructure
       - name: Run Migrations
         run: ./efbundle --connection "${CONNECTION_STRING}"
@@ -75,6 +82,7 @@ jobs:
           package: .
 
           
+
 
 
 
