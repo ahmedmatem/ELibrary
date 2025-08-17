@@ -29,6 +29,16 @@ jobs:
       - name: Build with dotnet
         run: dotnet build --configuration Release --no-restore
 
+
+      - name: Show file tree for debugging
+        run: |
+          echo "Current Directory:"
+          pwd
+          echo "Contents:"
+          dir /s /b
+
+
+
       - name: Install EF Core CLI
         run: dotnet tool install --global dotnet-ef
 
@@ -41,8 +51,8 @@ jobs:
         run: >
           dotnet ef database update
           --connection "$env:CONNECTION_STRING"
-          --project ./src/ELibrary.Infrastructure/ELibrary.Infrastructure.csproj
-          --startup-project ./src/ELibrary.Web/ELibrary.Web.csproj
+          --project \ELibrary.Infrastructure\ELibrary.Infrastructure.csproj
+          --startup-project .\src\ELibrary.Web\ELibrary.Web.csproj
         working-directory: .
 
       - name: dotnet publish
@@ -83,5 +93,6 @@ jobs:
           package: .
 
           
+
 
 
