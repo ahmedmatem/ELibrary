@@ -29,16 +29,6 @@ jobs:
       - name: Build with dotnet
         run: dotnet build --configuration Release --no-restore
 
-
-      - name: Show file tree for debugging
-        run: |
-          echo "Current Directory:"
-          pwd
-          echo "Contents:"
-          dir /s /b
-
-
-
       - name: Install EF Core CLI
         run: dotnet tool install --global dotnet-ef
 
@@ -93,6 +83,7 @@ jobs:
           package: .
 
           
+
 
 
 
