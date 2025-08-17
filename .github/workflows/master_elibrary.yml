@@ -43,7 +43,7 @@ jobs:
           --connection "$env:CONNECTION_STRING"
           --project ./src/ELibrary.Infrastructure/ELibrary.Infrastructure.csproj
           --startup-project ./src/ELibrary.Web/ELibrary.Web.csproj
-        working-directory: ./ELibrary
+        working-directory: .
 
       - name: dotnet publish
         run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
@@ -83,4 +83,5 @@ jobs:
           package: .
 
           
+
 
