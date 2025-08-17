@@ -39,10 +39,7 @@ jobs:
         env:
           CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
         run: >
-          dotnet ef database update
-          --connection "$env:CONNECTION_STRING"
-          --project ELibrary.Infrastructure\ELibrary.Infrastructure.csproj
-          --startup-project ELibrary.Web\ELibrary.Web.csproj
+          dotnet ef database update --connection "$env:CONNECTION_STRING" --project ELibrary.Infrastructure\ELibrary.Infrastructure.csproj --startup-project ELibrary.Web\ELibrary.Web.csproj
         working-directory: .
 
       - name: dotnet publish
@@ -83,6 +80,7 @@ jobs:
           package: .
 
           
+
 
 
 
