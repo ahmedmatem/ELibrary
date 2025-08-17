@@ -41,8 +41,8 @@ jobs:
         run: >
           dotnet ef database update
           --connection "$env:CONNECTION_STRING"
-          --project .\src\ELibrary.Infrastructure\ELibrary.Infrastructure.csproj
-          --startup-project .\src\ELibrary.Web\ELibrary.Web.csproj
+          --project ELibrary.Infrastructure\ELibrary.Infrastructure.csproj
+          --startup-project ELibrary.Web\ELibrary.Web.csproj
         working-directory: .
 
       - name: dotnet publish
@@ -83,6 +83,7 @@ jobs:
           package: .
 
           
+
 
 
 
