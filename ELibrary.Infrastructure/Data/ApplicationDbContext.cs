@@ -18,6 +18,10 @@ namespace ELibrary.Infrastructure.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
 
+            // Data seed
+            builder
+                .ApplyConfiguration(new IdentityRoleTypeConfiguration());
+
             builder.ApplyConfiguration(new ResourceTypeConfiguration());
         }
 
