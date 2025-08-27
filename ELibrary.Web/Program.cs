@@ -41,9 +41,20 @@ namespace ELibrary.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+            app.MapAreaControllerRoute(
+                name: "Admin",
+                areaName: "Admin",
+                pattern: "admin/{controller=Home}/{action=Index}/{id?}");
+            app.MapAreaControllerRoute(
+                name: "Teacher",
+                areaName: "Teacher",
+                pattern: "teacher/{controller=Home}/{action=Index}/{id?}");
+            app.MapAreaControllerRoute(
+                name: "Student",
+                areaName: "Student",
+                pattern: "student/{controller=Home}/{action=Index}/{id?}");
+
+            app.MapDefaultControllerRoute();
 
             app.MapRazorPages();
 
