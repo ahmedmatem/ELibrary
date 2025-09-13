@@ -8,6 +8,20 @@ namespace ELibrary.Core.Contracts
     public interface IResourceService
     {
         /// <summary>
+        /// Retrieves all resources as a queryable collection.
+        /// </summary>
+        /// <remarks>
+        /// Use this method when you need to apply additional LINQ operations (such as filtering, sorting, or paging) 
+        /// before materializing the results. The returned <see cref="IQueryable{T}"/> allows for deferred execution, 
+        /// meaning that the query is not executed until it is enumerated.
+        /// </remarks>
+        /// <returns>
+        /// An <see cref="IQueryable{T}"/> of <see cref="ResourceDto"/> objects representing all available resources. 
+        /// The collection may be empty if no resources exist.
+        /// </returns>
+        IQueryable<ResourceDto> GetAll();
+
+        /// <summary>
         /// Asynchronously adds a new resource based on the provided data transfer object (DTO).
         /// </summary>
         /// <remarks>The method performs the addition operation asynchronously and returns the resulting

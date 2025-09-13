@@ -1,10 +1,23 @@
-﻿using ELibrary.Core.Contracts;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using ELibrary.Core.Contracts;
 using ELibrary.Core.DTOs;
+using ELibrary.Infrastructure.Data.Models;
+using ELibrary.Infrastructure.Data.Repository;
 
 namespace ELibrary.Core.Services
 {
     public class ResourceService : IResourceService
     {
+        private readonly IMapper _mapper;
+        private readonly IRepository _repository;
+
+        public ResourceService(IMapper mapper, IRepository repository)
+        {
+            _mapper = mapper;
+            _repository = repository;
+        }
+
         /// <inheritdoc/>
         public Task<ResourceDto> AddAsync(ResourceDto resourceDto)
         {
@@ -15,6 +28,13 @@ namespace ELibrary.Core.Services
         public Task<bool> DeleteAsync(string id)
         {
             throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public IQueryable<ResourceDto> GetAll()
+        {
+            return _repository.AllReadonly<Resource>()
+                .ProjectTo<ResourceDto>(_mapper.ConfigurationProvider);
         }
 
         /// <inheritdoc/>
