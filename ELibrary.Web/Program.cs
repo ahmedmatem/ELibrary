@@ -1,3 +1,5 @@
+using ELibrary.Core.Automapper;
+using ELibrary.Web.Automapper;
 using ELibrary.Web.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +17,9 @@ namespace ELibrary.Web
 
             builder.Services.AddApplicationServices();
 
-            builder.Services.AddAutoMapper(typeof(Program));
+            builder.Services.AddAutoMapper(
+                typeof(WebMappingProfile).Assembly,
+                typeof(CoreMappingProfile).Assembly);
             
             // Add services to the container.
             builder.Services.AddControllersWithViews(options =>

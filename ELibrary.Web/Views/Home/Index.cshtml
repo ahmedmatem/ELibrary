@@ -1,8 +1,47 @@
-﻿@{
+﻿@model IEnumerable<ResourceViewModel>
+
+@section Styles {
+    @* <link rel="stylesheet" href="~/css/custom.css" /> *@
+    <style>
+        .book-card {
+            height: 100%; /* Make cards equal height */
+            display: flex;
+            flex-direction: column;
+        }
+
+            .book-card img {
+                object-fit: cover;
+                height: 250px;
+                width: 100%;
+            }
+
+            .book-card .card-body {
+                flex-grow: 1; /* Push footer to bottom */
+            }
+    </style>
+}
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container my-5">
+    <h2 class="mb-4 text-center">Book Collection</h2>
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-3 col-md-4 col-12">
+                <div class="card book-card shadow-sm">
+                    <img src="@item.FilePath" class="card-img-top" alt="Book Cover">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Title</h5>
+                        <p class="card-text">Author: John Doe</p>
+                    </div>
+                    <div class="card-footer text-center">
+                        <button class="btn btn-primary btn-sm">Details</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>

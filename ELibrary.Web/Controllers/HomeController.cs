@@ -1,24 +1,35 @@
 using System.Diagnostics;
-
 using Microsoft.AspNetCore.Mvc;
 
-using ELibrary.Web.Models;
-using System.Runtime.CompilerServices;
-using Microsoft.AspNetCore.Identity;
+using ELibrary.Core.Contracts;
 using ELibrary.Infrastructure.Data.Types;
+using ELibrary.Web.Models;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ELibrary.Web.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IResourceService _resourceService;
+        private readonly IAzureBlobService _blobService;
+        private readonly IMapper _mapper;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(
+            ILogger<HomeController> logger,
+            IResourceService resourceService,
+            IAzureBlobService blobService,
+            IMapper mapper)
         {
             _logger = logger;
+            _resourceService = resourceService;
+            _blobService = blobService;
+            _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             if (User.IsInRole(AppRole.ADMIN))
             {
@@ -34,7 +45,11 @@ namespace ELibrary.Web.Controllers
             }
             else
             {
-                return View();
+                var viewModel = await _resourceService.GetAll()
+                    .ProjectTo<ResourceViewModel>(_mapper.ConfigurationProvider)
+                    .ToListAsync();
+
+                return View(viewModel);
             }
         }
 

@@ -26,6 +26,8 @@ namespace ELibrary.Web.Extensions
         {
             services.AddScoped<IResourceService, ResourceService>();
 
+            services.AddScoped<IAzureBlobService, AzureBlobService>();
+
             return services;
         }
 
