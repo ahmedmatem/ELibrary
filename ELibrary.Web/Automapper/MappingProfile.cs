@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
-using System.Text.RegularExpressions;
+
+using ELibrary.Core.DTOs;
+using ELibrary.Web.Models;
 
 namespace ELibrary.Web.Automapper
 {
@@ -8,6 +10,7 @@ namespace ELibrary.Web.Automapper
         public MappingProfile()
         {
             //E.g. CreateMap<Resource, ResourceServiceModel>();
+            CreateMap<ResourceViewModel, ResourceDto>();
         }
     }
 }
