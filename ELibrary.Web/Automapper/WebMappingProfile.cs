@@ -5,12 +5,12 @@ using ELibrary.Web.Models;
 
 namespace ELibrary.Web.Automapper
 {
-    public class MappingProfile : Profile
+    public class WebMappingProfile : Profile
     {
-        public MappingProfile()
+        public WebMappingProfile()
         {
             //E.g. CreateMap<Resource, ResourceServiceModel>();
-            CreateMap<ResourceViewModel, ResourceDto>();
+            CreateMap<ResourceDto, ResourceViewModel>();
         }
     }
 }
