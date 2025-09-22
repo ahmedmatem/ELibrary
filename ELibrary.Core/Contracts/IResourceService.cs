@@ -28,10 +28,7 @@ namespace ELibrary.Core.Contracts
         /// resource. Ensure that the provided <paramref name="resourceDto"/> contains all required fields for the
         /// resource.</remarks>
         /// <param name="resourceDto">The data transfer object containing the details of the resource to add. Cannot be null.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="ResourceDto"/>
-        /// representing the added resource, including any updates made during the addition process (e.g., generated
-        /// IDs).</returns>
-        Task<ResourceDto> AddAsync(ResourceDto resourceDto);
+        Task AddAsync(ResourceDto resourceDto);
 
         /// <summary>
         /// Retrieves a resource by its unique identifier.

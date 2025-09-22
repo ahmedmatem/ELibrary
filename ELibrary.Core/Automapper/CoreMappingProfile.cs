@@ -9,7 +9,7 @@ namespace ELibrary.Core.Automapper
         public CoreMappingProfile()
         {
             //E.g. CreateMap<Resource, ResourceServiceModel>();
-            CreateMap<Resource, ResourceDto>();
+            CreateMap<Resource, ResourceDto>().ReverseMap();
         }
     }
 }

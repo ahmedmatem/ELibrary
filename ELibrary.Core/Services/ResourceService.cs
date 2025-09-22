@@ -19,9 +19,15 @@ namespace ELibrary.Core.Services
         }
 
         /// <inheritdoc/>
-        public Task<ResourceDto> AddAsync(ResourceDto resourceDto)
+        public async Task AddAsync(ResourceDto resourceDto)
         {
-            throw new NotImplementedException();
+            // Map DTO -> Entity
+            var resource = _mapper.Map<Resource>(resourceDto);
+            // Generate random Guid for Id
+            resource.Id = Guid.NewGuid().ToString();
+
+            // Save entity in repository
+            await _repository.AddAsync(resource);
         }
 
         /// <inheritdoc/>

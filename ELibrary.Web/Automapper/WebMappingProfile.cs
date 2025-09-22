@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 
 using ELibrary.Core.DTOs;
+using ELibrary.Web.Areas.Admin.Models.ResourceViewModels;
 using ELibrary.Web.Models;
 
 namespace ELibrary.Web.Automapper
@@ -9,8 +10,11 @@ namespace ELibrary.Web.Automapper
     {
         public WebMappingProfile()
         {
-            //E.g. CreateMap<Resource, ResourceServiceModel>();
             CreateMap<ResourceDto, ResourceViewModel>();
+
+            CreateMap<ResourceAddViewModel, ResourceDto>()
+                .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Id ?? Guid.NewGuid().ToString()))
+                .ReverseMap();
         }
     }
 }
