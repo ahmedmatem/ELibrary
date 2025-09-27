@@ -30,9 +30,20 @@ namespace ELibrary.Web.Areas.Admin.Models.ResourceViewModels
         public string? FilePath { get; set; }
 
         /// <summary>
+        /// The cover image path or URL for the resource.
+        /// </summary>
+        public string CoverImagePath { get; set; } = "";
+
+        /// <summary>
         /// File to be uploaded (handled via form submission).
         /// </summary>
         [Display(Name = "Upload File")]
         public IFormFile? File { get; set; }
+
+        /// <summary>
+        /// Cover Image File to be uploaded (handled via form submission).
+        /// </summary>
+        [Display(Name = "Upload File")]
+        public IFormFile? CoverImageFile { get; set; }
     }
 }

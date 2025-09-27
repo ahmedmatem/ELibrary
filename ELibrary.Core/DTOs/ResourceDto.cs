@@ -14,6 +14,7 @@
         public string Description { get; set; } = "";
         public string Type { get; set; } = ""; 
         public string FilePath { get; set; } = "";
+        public string CoverImagePath { get; set; } = "";
         public DateTime UploadedOn { get; set; }
     }
 }

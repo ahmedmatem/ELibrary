@@ -43,6 +43,12 @@ namespace ELibrary.Infrastructure.Data.Models
         public string FilePath { get; set; } = ""; // Could be a URL or file path
 
         /// <summary>
+        /// The cover image path or URL for the resource.
+        /// </summary>
+        [StringLength(500, ErrorMessage = "Cover image path or URL cannot exceed 500 characters.")]
+        public string? CoverImagePath { get; set; }
+
+        /// <summary>
         /// The date and time when the resource was uploaded to the library.
         /// Defaults to UTC now.
         /// </summary>

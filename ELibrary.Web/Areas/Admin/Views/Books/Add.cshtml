@@ -42,7 +42,14 @@
                 <label asp-for="File" class="form-label">Тип ресурс</label>
                 <input asp-for="File" class="form-select" />
                 <small class="text-muted">Напр. Електронна книга, Аудиокнига, Списание…</small>
-                <span asp-validation-for="Type" class="text-danger"></span>
+                <span asp-validation-for="File" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="CoverImageFile" class="form-label">Тип ресурс</label>
+                <input asp-for="CoverImageFile" class="form-select" />
+                <small class="text-muted">Напр. Електронна книга, Аудиокнига, Списание…</small>
+                <span asp-validation-for="CoverImageFile" class="text-danger"></span>
             </div>
 
             <div class="col-md-6">

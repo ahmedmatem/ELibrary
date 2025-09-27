@@ -4,6 +4,7 @@ using ELibrary.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ELibrary.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250927164734_AddImageCoverPath")]
+    partial class AddImageCoverPath
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,123 +84,113 @@ namespace ELibrary.Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c665888c-8ae4-492c-b766-4128a7e828ee",
-                            CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTu5dP-doCEi_ENZ0MohLSohexccNWBwwYlVg&s",
+                            Id = "ec4a054f-52be-4869-a88e-dfcfa67f1de1",
                             Description = "Basic algebra concepts for beginners.",
-                            FilePath = "",
+                            FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTu5dP-doCEi_ENZ0MohLSohexccNWBwwYlVg&s",
                             IsDeleted = false,
                             Subject = "Mathematics",
                             Title = "Introduction to Algebra",
                             Type = 0,
-                            UploadedOn = new DateTime(2025, 9, 27, 17, 32, 43, 317, DateTimeKind.Utc).AddTicks(4792)
+                            UploadedOn = new DateTime(2025, 9, 27, 16, 47, 32, 994, DateTimeKind.Utc).AddTicks(6153)
                         },
                         new
                         {
-                            Id = "9311918f-bb81-4b2f-b2c7-66918308adb0",
-                            CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAhAgn6PoF2RrL0mTnTVKq4DXHrbIKd5G20w&s",
+                            Id = "5cc33554-0efd-4a38-b9f9-f44b5377a075",
                             Description = "A timeline of major world history events.",
-                            FilePath = "",
+                            FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAhAgn6PoF2RrL0mTnTVKq4DXHrbIKd5G20w&s",
                             IsDeleted = false,
                             Subject = "History",
                             Title = "World History Overview",
                             Type = 0,
-                            UploadedOn = new DateTime(2025, 9, 27, 17, 32, 43, 317, DateTimeKind.Utc).AddTicks(4792)
+                            UploadedOn = new DateTime(2025, 9, 27, 16, 47, 32, 994, DateTimeKind.Utc).AddTicks(6153)
                         },
                         new
                         {
-                            Id = "91f882d8-1765-4912-9f45-ea4bc25a0e93",
-                            CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-z4VBEey9QK4XPYMXK3lkFI9zec7AVUM8sg&s",
+                            Id = "3c848653-3a9a-495f-8b2e-10e92bc518f5",
                             Description = "Short video explaining photosynthesis process.",
-                            FilePath = "",
+                            FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-z4VBEey9QK4XPYMXK3lkFI9zec7AVUM8sg&s",
                             IsDeleted = false,
                             Subject = "Biology",
                             Title = "Photosynthesis Explained",
                             Type = 1,
-                            UploadedOn = new DateTime(2025, 9, 27, 17, 32, 43, 317, DateTimeKind.Utc).AddTicks(4792)
+                            UploadedOn = new DateTime(2025, 9, 27, 16, 47, 32, 994, DateTimeKind.Utc).AddTicks(6153)
                         },
                         new
                         {
-                            Id = "9d28e790-8981-4b34-9975-4d51e164b845",
-                            CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHRGvbwPxrbxNYWyGFtHsuTPtrEwVJWDJf4A&s",
+                            Id = "61051064-eb2b-402f-8152-bc1b3a63d685",
                             Description = "An overview of Newton's three laws of motion.",
-                            FilePath = "",
+                            FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHRGvbwPxrbxNYWyGFtHsuTPtrEwVJWDJf4A&s",
                             IsDeleted = false,
                             Subject = "Physics",
                             Title = "Newton's Laws of Motion",
                             Type = 0,
-                            UploadedOn = new DateTime(2025, 9, 27, 17, 32, 43, 317, DateTimeKind.Utc).AddTicks(4792)
+                            UploadedOn = new DateTime(2025, 9, 27, 16, 47, 32, 994, DateTimeKind.Utc).AddTicks(6153)
                         },
                         new
                         {
-                            Id = "fdba7d71-696b-4183-a306-f95918c9a6e9",
-                            CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7YTHf1DDxgEYh5S8wRH9rPYj4gHwTGf1GTQ&s",
+                            Id = "a2644b51-3219-4e16-9315-d16fff656bd5",
                             Description = "Video lessons for basic French vocabulary.",
-                            FilePath = "",
+                            FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7YTHf1DDxgEYh5S8wRH9rPYj4gHwTGf1GTQ&s",
                             IsDeleted = false,
                             Subject = "Languages",
                             Title = "Learn French Basics",
                             Type = 1,
-                            UploadedOn = new DateTime(2025, 9, 27, 17, 32, 43, 317, DateTimeKind.Utc).AddTicks(4792)
+                            UploadedOn = new DateTime(2025, 9, 27, 16, 47, 32, 994, DateTimeKind.Utc).AddTicks(6153)
                         },
                         new
                         {
-                            Id = "33a2716e-df38-4050-a223-45191a2205b3",
-                            CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSraYINVd1T85796jgxTNZkOsdIFgB9kwx2rw&s",
+                            Id = "6826cfb9-576d-414a-976e-00a38bf65da1",
                             Description = "Reference guide to elements in the periodic table.",
-                            FilePath = "",
+                            FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSraYINVd1T85796jgxTNZkOsdIFgB9kwx2rw&s",
                             IsDeleted = false,
                             Subject = "Chemistry",
                             Title = "Periodic Table Reference",
                             Type = 0,
-                            UploadedOn = new DateTime(2025, 9, 27, 17, 32, 43, 317, DateTimeKind.Utc).AddTicks(4792)
+                            UploadedOn = new DateTime(2025, 9, 27, 16, 47, 32, 994, DateTimeKind.Utc).AddTicks(6153)
                         },
                         new
                         {
-                            Id = "cb1eb638-4679-4146-9d9a-485ad0976002",
-                            CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWshjlQbu3zszK0jh2L_TwIc5Sm81KaSp63A&s",
+                            Id = "5e74eaf2-d2f8-4f0f-b272-0841177c00f8",
                             Description = "Beginner-friendly programming concepts.",
-                            FilePath = "",
+                            FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWshjlQbu3zszK0jh2L_TwIc5Sm81KaSp63A&s",
                             IsDeleted = false,
                             Subject = "Computer Science",
                             Title = "Introduction to Programming",
                             Type = 0,
-                            UploadedOn = new DateTime(2025, 9, 27, 17, 32, 43, 317, DateTimeKind.Utc).AddTicks(4792)
+                            UploadedOn = new DateTime(2025, 9, 27, 16, 47, 32, 994, DateTimeKind.Utc).AddTicks(6153)
                         },
                         new
                         {
-                            Id = "d272c554-0ef6-467b-91b2-2009aecc861a",
-                            CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwMtF9HZNRaZHdTiKVcfPAo37lZXoUD0eOMQ&s",
+                            Id = "632fe130-60da-481d-9001-2787f6f78429",
                             Description = "Article about global warming and its effects.",
-                            FilePath = "",
+                            FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwMtF9HZNRaZHdTiKVcfPAo37lZXoUD0eOMQ&s",
                             IsDeleted = false,
                             Subject = "Environmental Science",
                             Title = "Climate Change and Its Impact",
                             Type = 3,
-                            UploadedOn = new DateTime(2025, 9, 27, 17, 32, 43, 317, DateTimeKind.Utc).AddTicks(4792)
+                            UploadedOn = new DateTime(2025, 9, 27, 16, 47, 32, 994, DateTimeKind.Utc).AddTicks(6153)
                         },
                         new
                         {
-                            Id = "56a6f0ff-3612-4bc5-bfbe-bfb5c4c0d071",
-                            CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ2_Bw8irY9VYn2pk5r9LcjSfopOg01evB3w&s",
+                            Id = "14240c9e-b57d-4f2c-ae73-2ad059db27f2",
                             Description = "PDF guide to understanding geometric shapes.",
-                            FilePath = "",
+                            FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ2_Bw8irY9VYn2pk5r9LcjSfopOg01evB3w&s",
                             IsDeleted = false,
                             Subject = "Mathematics",
                             Title = "Basic Geometry Shapes",
                             Type = 0,
-                            UploadedOn = new DateTime(2025, 9, 27, 17, 32, 43, 317, DateTimeKind.Utc).AddTicks(4792)
+                            UploadedOn = new DateTime(2025, 9, 27, 16, 47, 32, 994, DateTimeKind.Utc).AddTicks(6153)
                         },
                         new
                         {
-                            Id = "f3d038b3-2702-4c42-9ee6-0eae131d7a79",
-                            CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWLOImHrZv1Gi5dPoLPOa7YnPaYDgAvf6tfA&s",
+                            Id = "5a19fcf9-1a8b-495b-8248-f58549cec107",
                             Description = "Video lecture explaining supply and demand.",
-                            FilePath = "",
+                            FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWLOImHrZv1Gi5dPoLPOa7YnPaYDgAvf6tfA&s",
                             IsDeleted = false,
                             Subject = "Economics",
                             Title = "Introduction to Economics",
                             Type = 1,
-                            UploadedOn = new DateTime(2025, 9, 27, 17, 32, 43, 317, DateTimeKind.Utc).AddTicks(4792)
+                            UploadedOn = new DateTime(2025, 9, 27, 16, 47, 32, 994, DateTimeKind.Utc).AddTicks(6153)
                         });
                 });
 
@@ -230,22 +223,22 @@ namespace ELibrary.Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "adeac8a4-eb6f-4089-9443-8dc547b1fca6",
-                            ConcurrencyStamp = "8b17c420-5b95-45d6-b44d-de3cde5e0ec2",
+                            Id = "8b554c9b-6465-4f8a-a8ff-02c1dee1167f",
+                            ConcurrencyStamp = "5555d156-e315-45a4-b12f-15bf054cc511",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "d0b85c97-0bb1-4e8f-be48-cb3cd44b5308",
-                            ConcurrencyStamp = "9f2c086f-200e-49f2-a3a3-1fd82c43d8d2",
+                            Id = "dc2725a2-a6da-4074-95b6-f4e0522ec5d0",
+                            ConcurrencyStamp = "40f74b2e-96dc-4418-a73b-f87ff347f247",
                             Name = "Teacher",
                             NormalizedName = "TEACHER"
                         },
                         new
                         {
-                            Id = "865d31da-4bb6-4663-8e7c-cbfdbdbfe380",
-                            ConcurrencyStamp = "0f4b813b-b13c-47bf-8758-bcdfd57fd1bb",
+                            Id = "e2967836-9098-4236-a1d5-e73a4ca4f8dc",
+                            ConcurrencyStamp = "7203e684-087c-450c-93be-87bbbf0322d2",
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         });

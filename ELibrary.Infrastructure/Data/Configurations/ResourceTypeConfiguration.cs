@@ -18,7 +18,7 @@ namespace ELibrary.Infrastructure.Data.Configurations
                     Subject = "Mathematics",
                     Description = "Basic algebra concepts for beginners.",
                     Type = ResourceType.PDF,
-                    FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTu5dP-doCEi_ENZ0MohLSohexccNWBwwYlVg&s",
+                    CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTu5dP-doCEi_ENZ0MohLSohexccNWBwwYlVg&s",
                     UploadedOn = uploadedOn
                 },
                 new Resource
@@ -28,7 +28,7 @@ namespace ELibrary.Infrastructure.Data.Configurations
                     Subject = "History",
                     Description = "A timeline of major world history events.",
                     Type = ResourceType.PDF,
-                    FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAhAgn6PoF2RrL0mTnTVKq4DXHrbIKd5G20w&s",
+                    CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAhAgn6PoF2RrL0mTnTVKq4DXHrbIKd5G20w&s",
                     UploadedOn = uploadedOn
                 },
                 new Resource
@@ -38,7 +38,7 @@ namespace ELibrary.Infrastructure.Data.Configurations
                     Subject = "Biology",
                     Description = "Short video explaining photosynthesis process.",
                     Type = ResourceType.Video,
-                    FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-z4VBEey9QK4XPYMXK3lkFI9zec7AVUM8sg&s",
+                    CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-z4VBEey9QK4XPYMXK3lkFI9zec7AVUM8sg&s",
                     UploadedOn = uploadedOn
                 },
                 new Resource
@@ -48,7 +48,7 @@ namespace ELibrary.Infrastructure.Data.Configurations
                     Subject = "Physics",
                     Description = "An overview of Newton's three laws of motion.",
                     Type = ResourceType.PDF,
-                    FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHRGvbwPxrbxNYWyGFtHsuTPtrEwVJWDJf4A&s",
+                    CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHRGvbwPxrbxNYWyGFtHsuTPtrEwVJWDJf4A&s",
                     UploadedOn = uploadedOn
                 },
                 new Resource
@@ -58,7 +58,7 @@ namespace ELibrary.Infrastructure.Data.Configurations
                     Subject = "Languages",
                     Description = "Video lessons for basic French vocabulary.",
                     Type = ResourceType.Video,
-                    FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7YTHf1DDxgEYh5S8wRH9rPYj4gHwTGf1GTQ&s",
+                    CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7YTHf1DDxgEYh5S8wRH9rPYj4gHwTGf1GTQ&s",
                     UploadedOn = uploadedOn
                 },
                 new Resource
@@ -68,7 +68,7 @@ namespace ELibrary.Infrastructure.Data.Configurations
                     Subject = "Chemistry",
                     Description = "Reference guide to elements in the periodic table.",
                     Type = ResourceType.PDF,
-                    FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSraYINVd1T85796jgxTNZkOsdIFgB9kwx2rw&s",
+                    CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSraYINVd1T85796jgxTNZkOsdIFgB9kwx2rw&s",
                     UploadedOn = uploadedOn
                 },
                 new Resource
@@ -78,7 +78,7 @@ namespace ELibrary.Infrastructure.Data.Configurations
                     Subject = "Computer Science",
                     Description = "Beginner-friendly programming concepts.",
                     Type = ResourceType.PDF,
-                    FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWshjlQbu3zszK0jh2L_TwIc5Sm81KaSp63A&s",
+                    CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWshjlQbu3zszK0jh2L_TwIc5Sm81KaSp63A&s",
                     UploadedOn = uploadedOn
                 },
                 new Resource
@@ -88,7 +88,7 @@ namespace ELibrary.Infrastructure.Data.Configurations
                     Subject = "Environmental Science",
                     Description = "Article about global warming and its effects.",
                     Type = ResourceType.Link,
-                    FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwMtF9HZNRaZHdTiKVcfPAo37lZXoUD0eOMQ&s",
+                    CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwMtF9HZNRaZHdTiKVcfPAo37lZXoUD0eOMQ&s",
                     UploadedOn = uploadedOn
                 },
                 new Resource
@@ -98,7 +98,7 @@ namespace ELibrary.Infrastructure.Data.Configurations
                     Subject = "Mathematics",
                     Description = "PDF guide to understanding geometric shapes.",
                     Type = ResourceType.PDF,
-                    FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ2_Bw8irY9VYn2pk5r9LcjSfopOg01evB3w&s",
+                    CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ2_Bw8irY9VYn2pk5r9LcjSfopOg01evB3w&s",
                     UploadedOn = uploadedOn
                 },
                 new Resource
@@ -108,7 +108,7 @@ namespace ELibrary.Infrastructure.Data.Configurations
                     Subject = "Economics",
                     Description = "Video lecture explaining supply and demand.",
                     Type = ResourceType.Video,
-                    FilePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWLOImHrZv1Gi5dPoLPOa7YnPaYDgAvf6tfA&s",
+                    CoverImagePath = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWLOImHrZv1Gi5dPoLPOa7YnPaYDgAvf6tfA&s",
                     UploadedOn = uploadedOn
                 }
             );

@@ -51,7 +51,7 @@ namespace ELibrary.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            if(model.File is not null)
+            if(model.File is not null && model.CoverImageFile is not null)
             {
                 if(model.File.Length == 0 || model.File.Length > RESOURCE_FILE_MAX_SIZE)
                 {
@@ -72,7 +72,14 @@ namespace ELibrary.Web.Areas.Admin.Controllers
                 // set FilePath & save
                 model.FilePath = _azureBlobService.BlobContainerUrl + blobName;
                 await _azureBlobService.UploadFileAsync(model.File, blobName);
-                
+
+                // Set Cover Image & save
+                ext = Path.GetExtension(model.CoverImageFile.FileName).ToLowerInvariant();
+                blobName = Guid.NewGuid().ToString() + ext;
+
+                model.CoverImagePath = _azureBlobService.BlobContainerUrl + blobName;
+                await _azureBlobService.UploadFileAsync(model.CoverImageFile, blobName);
+
             }
 
             var resourceDto = mapper.Map<ResourceDto>(model);
