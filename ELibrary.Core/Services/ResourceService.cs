@@ -28,6 +28,7 @@ namespace ELibrary.Core.Services
 
             // Save entity in repository
             await _repository.AddAsync(resource);
+            await _repository.SaveChangesAsync<Resource>();
         }
 
         /// <inheritdoc/>

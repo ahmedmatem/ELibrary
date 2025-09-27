@@ -7,6 +7,9 @@ using ELibrary.Web.Areas.Admin.Models.ResourceViewModels;
 using static ELibrary.Infrastructure.Data.DataConstants;
 using System.Threading.Tasks;
 using ELibrary.Core.DTOs;
+using AutoMapper.QueryableExtensions;
+using ELibrary.Web.Models;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace ELibrary.Web.Areas.Admin.Controllers
@@ -25,9 +28,13 @@ namespace ELibrary.Web.Areas.Admin.Controllers
             _resourceService = resourceService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var viewModel = await _resourceService.GetAll()
+                .ProjectTo<ResourceViewModel>(mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return View(viewModel);
         }
 
         [HttpGet]

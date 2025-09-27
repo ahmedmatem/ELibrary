@@ -1,0 +1,14 @@
+﻿@model ELibrary.Web.Models.ResourceViewModel
+
+<div class="col-lg-3 col-md-4 col-12">
+    <div class="card book-card shadow-sm">
+        <img src="@Model.FilePath" class="card-img-top" alt="Book Cover">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Title</h5>
+            <p class="card-text">Author: @Model.Subject</p>
+        </div>
+        <div class="card-footer text-center">
+            <button class="btn btn-primary btn-sm">Details</button>
+        </div>
+    </div>
+</div>
