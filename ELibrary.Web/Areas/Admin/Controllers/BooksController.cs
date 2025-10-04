@@ -37,10 +37,23 @@ namespace ELibrary.Web.Areas.Admin.Controllers
             return View(viewModel);
         }
 
-        [HttpGet("admin/books/pdf/{filePath}")]
-        public IActionResult Pdf(string filePath)
+        [HttpGet]
+        public IActionResult Open(string filePath)
         {
+            ViewData["FileName"]= Path.GetFileName(filePath);
             return View();
+        }
+
+        [HttpGet("admin/books/pdf/{fileName}")]
+        public async Task<IActionResult> Pdf(string fileName)
+        {
+            if(fileName is null)
+            {
+                return NotFound();
+            }
+
+            var stream = await _azureBlobService.OpenReadAsync(fileName);
+            return File(stream, "application/pdf", enableRangeProcessing: true);
         }
 
         [HttpGet]

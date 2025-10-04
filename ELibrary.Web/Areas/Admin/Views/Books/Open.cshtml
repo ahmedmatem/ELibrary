@@ -1,0 +1,171 @@
+﻿@{
+    // The PDF you want to display (served by your controller)
+    var pdfUrl = Url.Action("Pdf", "Books", new { fileName = ViewData["FileName"] });
+}
+
+<div class="pdf-shell">
+    <div class="pdf-toolbar">
+        <button id="btnPrev" type="button" aria-label="Previous page">◀</button>
+        <span>
+            <input id="pageNumber" type="number" min="1" value="1" style="width:4rem"> /
+            <span id="pageCount">–</span>
+        </span>
+        <button id="btnNext" type="button" aria-label="Next page">▶</button>
+        <span class="spacer"></span>
+        <button id="btnZoomOut" type="button">−</button>
+        <button id="btnZoomIn" type="button">+</button>
+        <button id="btnFit" type="button">Fit width</button>
+    </div>
+
+    <div id="canvasWrap">
+        <canvas id="pdfCanvas"></canvas>
+    </div>
+</div>
+
+<style>
+    .pdf-shell { display: grid; grid-template-rows: auto 1fr; height: 80vh; max-height: 100vh; }
+    .pdf-toolbar { display:flex; gap:.5rem; align-items:center; padding:.5rem .75rem; border:1px solid #e5e7eb; border-radius:.75rem; margin-bottom:.5rem; }
+    .pdf-toolbar .spacer { flex:1; }
+    #canvasWrap { position:relative; width:100%; height:100%; overflow:auto; background:#f8fafc; display:grid; place-items:start center; }
+    #pdfCanvas { background:white; box-shadow:0 1px 8px rgba(0,0,0,.08); }
+</style>
+
+@section Scripts{
+    <script type="module">
+        import * as pdfjsLib from '/lib/pdf.js/pdf.mjs';
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '/lib/pdf.js/pdf.worker.mjs';
+
+        // Config
+        const PDF_URL = '@pdfUrl';
+        let pdfDoc = null, currentPage = 1, scale = 1.0, renderTask = null;
+
+        const canvas = document.getElementById('pdfCanvas');
+        const ctx = canvas.getContext('2d');
+        const pageNumberInput = document.getElementById('pageNumber');
+        const pageCountSpan = document.getElementById('pageCount');
+        const wrap = document.getElementById('canvasWrap');
+
+        const dpr = window.devicePixelRatio || 1;
+
+        function fitWidthScale(pageViewportAt1) {
+          const padding = 24; // small left/right gutter
+          const containerWidthCSS = wrap.clientWidth - padding;
+          return Math.max(0.1, containerWidthCSS / pageViewportAt1.width);
+        }
+
+        async function renderPage(num, opts = { keepScale:false, fit:false }) {
+          if (!pdfDoc) return;
+          const page = await pdfDoc.getPage(num);
+
+          // Calculate scale
+          const v1 = page.getViewport({ scale: 1 });
+          if (opts.fit) {
+            scale = fitWidthScale(v1);
+          } else if (!opts.keepScale && scale === 1.0) {
+            // First render: auto-fit to width
+            scale = fitWidthScale(v1);
+          }
+
+          const viewport = page.getViewport({ scale });
+
+          // Resize canvas for HiDPI
+          canvas.style.width = `${viewport.width}px`;
+          canvas.style.height = `${viewport.height}px`;
+          canvas.width = Math.floor(viewport.width * dpr);
+          canvas.height = Math.floor(viewport.height * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.clearRect(0, 0, viewport.width, viewport.height);
+
+          // Cancel any in-flight render before starting a new one
+          try { await renderTask?.promise; } catch {}
+
+          renderTask = page.render({ canvasContext: ctx, viewport });
+          await renderTask.promise;
+
+          // (Optional) text layer for selectable text — requires extra CSS.
+          // const textContent = await page.getTextContent();
+          // const textLayerDiv = document.getElementById('textLayer') ?? createTextLayer();
+          // await pdfjsLib.renderTextLayer({
+          //   textContentSource: textContent,
+          //   container: textLayerDiv,
+          //   viewport,
+          //   textDivs: []
+          // }).promise;
+
+          pageNumberInput.value = currentPage;
+        }
+
+        // Load the document
+        (async () => {
+          const loadingTask = pdfjsLib.getDocument({ url: PDF_URL });
+          pdfDoc = await loadingTask.promise;
+          pageCountSpan.textContent = pdfDoc.numPages;
+          await renderPage(currentPage);
+        })();
+
+        // Controls
+        document.getElementById('btnPrev').addEventListener('click', async () => {
+          if (currentPage <= 1) return;
+          currentPage--;
+          await renderPage(currentPage, { keepScale:true });
+        });
+
+        document.getElementById('btnNext').addEventListener('click', async () => {
+          if (currentPage >= pdfDoc.numPages) return;
+          currentPage++;
+          await renderPage(currentPage, { keepScale:true });
+        });
+
+        document.getElementById('btnZoomIn').addEventListener('click', async () => {
+          scale = Math.min(scale * 1.2, 6);
+          await renderPage(currentPage, { keepScale:true });
+        });
+
+        document.getElementById('btnZoomOut').addEventListener('click', async () => {
+          scale = Math.max(scale / 1.2, 0.1);
+          await renderPage(currentPage, { keepScale:true });
+        });
+
+        document.getElementById('btnFit').addEventListener('click', async () => {
+          await renderPage(currentPage, { fit:true });
+        });
+
+        pageNumberInput.addEventListener('change', async (e) => {
+          const to = Math.min(Math.max(parseInt(e.target.value || '1', 10), 1), pdfDoc.numPages);
+          if (to !== currentPage) {
+            currentPage = to;
+            await renderPage(currentPage, { keepScale:true });
+          } else {
+            pageNumberInput.value = currentPage;
+          }
+        });
+
+        // Refit on resize (debounced)
+        let resizeT;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeT);
+          resizeT = setTimeout(() => renderPage(currentPage, { fit:true }), 120);
+        });
+
+        // (Optional) Ctrl/Cmd + wheel zoom
+        wrap.addEventListener('wheel', async (e) => {
+          if (!(e.ctrlKey || e.metaKey)) return;
+          e.preventDefault();
+          const factor = e.deltaY < 0 ? 1.1 : 1/1.1;
+          scale = Math.min(Math.max(scale * factor, 0.1), 6);
+          await renderPage(currentPage, { keepScale:true });
+        }, { passive:false });
+
+        // Helper: text layer container (optional)
+        // function createTextLayer() {
+        //   const div = document.createElement('div');
+        //   div.id = 'textLayer';
+        //   div.style.position = 'absolute';
+        //   div.style.inset = '0';
+        //   wrap.style.position = 'relative';
+        //   wrap.appendChild(div);
+        //   return div;
+        // }
+    </script>
+}
+
