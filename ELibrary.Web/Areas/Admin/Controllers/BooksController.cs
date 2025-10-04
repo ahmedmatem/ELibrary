@@ -38,7 +38,7 @@ namespace ELibrary.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult Load(string id)
+        public IActionResult OpenReadAsync(string filePath)
         {
             return View();
         }
