@@ -37,8 +37,8 @@ namespace ELibrary.Web.Areas.Admin.Controllers
             return View(viewModel);
         }
 
-        [HttpGet]
-        public IActionResult OpenReadAsync(string filePath)
+        [HttpGet("admin/books/pdf/{filePath}")]
+        public IActionResult Pdf(string filePath)
         {
             return View();
         }

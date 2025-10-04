@@ -28,5 +28,7 @@ namespace ELibrary.Core.Contracts
         /// Deleting a file from Azure Blob Storage
         /// </summary>
         Task<Response<bool>> DeleteAsync(string blobName);
+
+        Task<Stream> OpenReadAsync(string fileName);
     }
 }

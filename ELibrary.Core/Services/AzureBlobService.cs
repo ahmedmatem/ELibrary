@@ -68,5 +68,35 @@ namespace ELibrary.Core.Services
             return await blobContainerClient
                 .DeleteBlobIfExistsAsync(blobName, DeleteSnapshotsOption.IncludeSnapshots);
         }
+
+        /// <summary>
+        /// Opens a read-only, seekable stream for the specified blob in the configured container.
+        /// </summary>
+        /// <param name="fileName">
+        /// The blob name (optionally including virtual folders), e.g. <c>"docs/algebra.pdf"</c>.
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.IO.Stream"/> positioned at the start of the blob if it exists; otherwise <c>null</c>.
+        /// The caller is responsible for disposing the returned stream.
+        /// </returns>
+        /// <remarks>
+        /// The stream is created with <c>AllowModifications = false</c> to ensure a consistent read.
+        /// Because the stream supports seeking and HTTP range requests, it is suitable for returning from
+        /// ASP.NET Core using <c>File(stream, "application/pdf", enableRangeProcessing: true)</c> for
+        /// efficient, partial loading of large files.
+        /// </remarks>
+        /// <exception cref="Azure.RequestFailedException">
+        /// Thrown if the underlying Storage request fails.
+        /// </exception>
+        public async Task<Stream> OpenReadAsync(string fileName)
+        {
+            var blob = blobContainerClient.GetBlobClient(fileName);
+            if(!await blob.ExistsAsync())
+            {
+                return null;
+            }
+
+            return await blob.OpenReadAsync(new BlobOpenReadOptions(false));
+        }
     }
 }
