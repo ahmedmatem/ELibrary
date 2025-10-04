@@ -38,6 +38,12 @@ namespace ELibrary.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        public IActionResult Load(string id)
+        {
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult Add()
         {
             return View();

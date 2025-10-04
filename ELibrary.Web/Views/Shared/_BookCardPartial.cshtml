@@ -1,5 +1,9 @@
 ﻿@model ELibrary.Web.Models.ResourceViewModel
 
+@{
+    var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
+}
+
 <div class="col-lg-2 col-md-3 col-6">
     <div class="card book-card shadow-sm">
         <img src="@Model.CoverImagePath" class="card-img-top" alt="Book Cover">
@@ -8,7 +12,10 @@
             <p class="card-text">Author: @Model.Subject</p>
         </div>
         <div class="card-footer text-center">
-            <button class="btn btn-primary btn-sm">Details</button>
+            <a asp-area="@currentArea"
+               asp-action="Load"
+               asp-route-id="@Model.Id"
+               class="btn btn-primary btn-sm">Отвори</a>
         </div>
     </div>
 </div>
