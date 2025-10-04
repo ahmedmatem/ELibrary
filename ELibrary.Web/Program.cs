@@ -2,6 +2,7 @@ using ELibrary.Core.Automapper;
 using ELibrary.Web.Automapper;
 using ELibrary.Web.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace ELibrary.Web
 {
@@ -38,7 +39,10 @@ namespace ELibrary.Web
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+
+            var types = new FileExtensionContentTypeProvider();
+            types.Mappings[".mjs"] = "text/javascript";
+            app.UseStaticFiles(new StaticFileOptions() { ContentTypeProvider = types});
 
             app.UseRouting();
 
