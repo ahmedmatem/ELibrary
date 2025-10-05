@@ -44,6 +44,13 @@ namespace ELibrary.Web.Areas.Admin.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult OpenInfinity(string filePath)
+        {
+            ViewData["FileName"] = Path.GetFileName(filePath);
+            return View();
+        }
+
         [HttpGet("admin/books/pdf/{fileName}")]
         public async Task<IActionResult> Pdf(string fileName)
         {

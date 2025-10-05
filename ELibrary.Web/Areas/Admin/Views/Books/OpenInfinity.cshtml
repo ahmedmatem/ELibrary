@@ -1,0 +1,434 @@
+﻿@{
+    // Your controller action that streams PDFs (auth-friendly; range-enabled)
+    var pdfUrl = Url.Action("Pdf", "Books", new { fileName = ViewData["FileName"] });
+}
+
+<div class="pdf-reader">
+    <aside class="thumbs" id="thumbs">
+        <div class="thumbs-header">
+            <span>Pages</span>
+            <button id="toggleThumbs" type="button" title="Hide thumbnails">⟨⟩</button>
+        </div>
+        <div id="thumbList"></div>
+    </aside>
+
+    <main class="pages" id="pages">
+        <div class="pages-toolbar">
+            <button id="fitWidth" type="button">Fit width</button>
+            <button id="zoomOut" type="button">−</button>
+            <button id="zoomIn" type="button">+</button>
+            <span class="spacer"></span>
+            <label>
+                Page
+                <input id="goTo" type="number" value="1" min="1" style="width:4rem" />
+                <span id="pageCount">/ –</span>
+            </label>
+        </div>
+        <div id="pageStack" class="page-stack"></div>
+    </main>
+</div>
+
+<style>
+    .pdf-reader {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 0.75rem;
+        height: 90vh;
+    }
+
+    .thumbs {
+        border: 1px solid #e5e7eb;
+        border-radius: .75rem;
+        overflow: hidden;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        background: #fff;
+    }
+
+    .thumbs-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: .5rem .75rem;
+        border-bottom: 1px solid #e5e7eb;
+        font-weight: 600;
+    }
+
+    #thumbList {
+        overflow: auto;
+        padding: .5rem;
+        display: grid;
+        gap: .5rem;
+    }
+
+    .thumb {
+        display: grid;
+        gap: .25rem;
+        cursor: pointer;
+        padding: .25rem;
+        border-radius: .5rem;
+        border: 1px solid transparent;
+    }
+
+        .thumb.active {
+            background: #eef2ff;
+            border-color: #c7d2fe;
+        }
+
+        .thumb canvas {
+            width: 100%;
+            height: auto;
+            background: #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,.08);
+        }
+
+        .thumb .label {
+            text-align: center;
+            font-size: .8rem;
+            color: #6b7280;
+        }
+
+    .pages {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        min-width: 0;
+    }
+
+    .pages-toolbar {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .5rem .75rem;
+        border: 1px solid #e5e7eb;
+        border-radius: .75rem;
+        background: #fff;
+        margin-bottom: .5rem;
+    }
+
+        .pages-toolbar .spacer {
+            flex: 1;
+        }
+
+    .page-stack {
+        overflow: auto;
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: .75rem;
+        padding: 1rem;
+        position: relative;
+    }
+
+    .page {
+        display: grid;
+        justify-items: center;
+        gap: .25rem;
+        margin: 0 auto 1rem auto;
+        width: min(100%, 1200px);
+    }
+
+        .page .number {
+            color: #6b7280;
+            font-size: .85rem;
+        }
+
+        .page canvas {
+            background: #fff;
+            box-shadow: 0 2px 12px rgba(0,0,0,.08);
+            border-radius: .25rem;
+            max-width: 100%;
+        }
+
+    /* Collapse thumbs */
+    .thumbs.collapsed {
+        width: 0;
+        padding: 0;
+        border: none;
+        overflow: hidden;
+    }
+
+    .pdf-reader:has(.thumbs.collapsed) {
+        grid-template-columns: 0 1fr;
+    }
+</style>
+
+<script type="module">
+     import * as pdfjsLib from '/lib/pdf.js/pdf.mjs';
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '/lib/pdf.js/pdf.worker.mjs';
+
+    // ===== Config =====
+    const PDF_URL = '@pdfUrl';
+    const MAX_SCALE = 6, MIN_SCALE = 0.1;
+    const EVICT_FAR_PAGES = true;        // free memory when pages are far away
+    const EVICT_DISTANCE = 6;            // pages away from current to keep
+
+    // ===== State =====
+    let pdf = null;
+    let scale = 1.0;
+    let currentPage = 1;
+    const rendered = new Set();          // pages currently rendered
+    const rendering = new Map();         // pageNo -> renderTask
+    const pageDivs = new Map();          // pageNo -> container div
+    const thumbDivs = new Map();         // pageNo -> thumb div
+
+    // UI elems
+    const pageStack = document.getElementById('pageStack');
+    const pagesRoot = document.getElementById('pages');
+    const thumbs = document.getElementById('thumbs');
+    const thumbList = document.getElementById('thumbList');
+    const fitWidthBtn = document.getElementById('fitWidth');
+    const zoomInBtn = document.getElementById('zoomIn');
+    const zoomOutBtn = document.getElementById('zoomOut');
+    const goToInput = document.getElementById('goTo');
+    const pageCountSpan = document.getElementById('pageCount');
+    const toggleThumbsBtn = document.getElementById('toggleThumbs');
+
+    // DPR aware canvas helper
+    const dpr = window.devicePixelRatio || 1;
+    function sizeCanvas(canvas, viewport) {
+      canvas.style.width  = `${viewport.width}px`;
+      canvas.style.height = `${viewport.height}px`;
+      canvas.width  = Math.floor(viewport.width  * dpr);
+      canvas.height = Math.floor(viewport.height * dpr);
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return ctx;
+    }
+
+    function containerWidth() {
+      // Width of the content box inside the scroll area
+      // Subtract paddings (pageStack has 1rem padding = 16px)
+      const styles = getComputedStyle(pageStack);
+      const paddingX = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
+      return pageStack.clientWidth - paddingX;
+    }
+
+    function computeFitScale(viewportAt1) {
+      // Leave a small margin
+      const w = containerWidth() - 16;
+      return Math.max(MIN_SCALE, w / viewportAt1.width);
+    }
+
+    // ===== Page containers + thumbs =====
+    function ensurePageContainer(n) {
+      if (pageDivs.has(n)) return pageDivs.get(n);
+      const wrapper = document.createElement('div');
+      wrapper.className = 'page';
+      wrapper.dataset.page = String(n);
+
+      const label = document.createElement('div');
+      label.className = 'number';
+      label.textContent = `Page ${n}`;
+
+      const canvas = document.createElement('canvas');
+      canvas.id = `page-${n}`;
+
+      wrapper.append(canvas, label);
+      pageStack.appendChild(wrapper);
+      pageDivs.set(n, wrapper);
+      return wrapper;
+    }
+
+    function ensureThumb(n) {
+      if (thumbDivs.has(n)) return thumbDivs.get(n);
+      const item = document.createElement('div');
+      item.className = 'thumb';
+      item.dataset.page = String(n);
+
+      const c = document.createElement('canvas');
+      c.id = `thumb-${n}`;
+
+      const lab = document.createElement('div');
+      lab.className = 'label';
+      lab.textContent = n;
+
+      item.append(c, lab);
+      item.addEventListener('click', () => scrollToPage(n));
+      thumbList.appendChild(item);
+      thumbDivs.set(n, item);
+      return item;
+    }
+
+    // ===== Rendering =====
+    async function renderPage(n, { keepScale = true } = {}) {
+      if (rendering.has(n)) return rendering.get(n).promise;
+
+      const page = await pdf.getPage(n);
+      if (!keepScale && scale === 1.0) {
+        // First time: fit to width
+        const v1 = page.getViewport({ scale: 1 });
+        scale = computeFitScale(v1);
+      }
+
+      const container = ensurePageContainer(n);
+      const canvas = container.querySelector('canvas');
+      const viewport = page.getViewport({ scale });
+
+      const ctx = sizeCanvas(canvas, viewport);
+      try { await rendering.get(n)?.promise; } catch {}
+      const task = page.render({ canvasContext: ctx, viewport });
+      rendering.set(n, task);
+      await task.promise;
+      rendering.delete(n);
+      rendered.add(n);
+      return true;
+    }
+
+    async function renderThumb(n) {
+      const page = await pdf.getPage(n);
+      const v1 = page.getViewport({ scale: 1 });
+      const targetWidth = 160; // px
+      const tScale = Math.max(0.1, targetWidth / v1.width);
+      const viewport = page.getViewport({ scale: tScale });
+
+      const t = ensureThumb(n);
+      const canvas = t.querySelector('canvas');
+      const ctx = sizeCanvas(canvas, viewport);
+      await page.render({ canvasContext: ctx, viewport }).promise;
+    }
+
+    // ===== Scrolling + observation =====
+    const pageObserver = new IntersectionObserver(async entries => {
+      for (const entry of entries) {
+        const n = parseInt(entry.target.dataset.page, 10);
+        if (entry.isIntersecting) {
+          await renderPage(n, { keepScale: true });
+        }
+      }
+    }, { root: pageStack, rootMargin: '600px 0px', threshold: 0.01 });
+
+    const activeObserver = new IntersectionObserver(entries => {
+      // Pick the most visible page as current
+      let best = { ratio: 0, page: currentPage };
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        const n = parseInt(e.target.dataset.page, 10);
+        if (e.intersectionRatio > best.ratio) best = { ratio: e.intersectionRatio, page: n };
+      }
+      if (best.page !== currentPage) setActivePage(best.page);
+    }, { root: pageStack, threshold: [0.6, 0.8, 1] });
+
+    function setActivePage(n) {
+      currentPage = n;
+      goToInput.value = String(n);
+      // Highlight thumb
+      for (const [p, el] of thumbDivs) {
+        el.classList.toggle('active', p === n);
+      }
+      if (EVICT_FAR_PAGES) evictFarPages(n);
+    }
+
+    function evictFarPages(center) {
+      for (const p of [...rendered]) {
+        if (Math.abs(p - center) > EVICT_DISTANCE) {
+          const div = pageDivs.get(p);
+          const canvas = div?.querySelector('canvas');
+          if (canvas) { canvas.width = 0; canvas.height = 0; } // releases bitmap memory
+          rendered.delete(p); // mark as not rendered, will re-render when visible
+        }
+      }
+    }
+
+    function observePage(n) {
+      const container = ensurePageContainer(n);
+      pageObserver.observe(container);
+      activeObserver.observe(container);
+    }
+
+    // Lazy thumbs
+    const thumbObserver = new IntersectionObserver(entries => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          const n = parseInt(e.target.dataset.page, 10);
+          renderThumb(n);
+          thumbObserver.unobserve(e.target);
+        }
+      }
+    }, { root: thumbList, rootMargin: '400px 0px', threshold: 0.01 });
+
+    function observeThumb(n) {
+      const el = ensureThumb(n);
+      thumbObserver.observe(el);
+    }
+
+    function scrollToPage(n) {
+      ensurePageContainer(n).scrollIntoView({ block: 'start', behavior: 'smooth' });
+    }
+
+    // ===== Zoom / Fit =====
+    async function rerenderVisible() {
+      // Re-render pages currently (or almost) visible
+      const visible = [...pageDivs.keys()].filter(n => {
+        const el = pageDivs.get(n);
+        const rect = el.getBoundingClientRect();
+        const rootRect = pageStack.getBoundingClientRect();
+        const top = Math.max(rect.top, rootRect.top);
+        const bottom = Math.min(rect.bottom, rootRect.bottom);
+        const overlap = Math.max(0, bottom - top);
+        return overlap > 40; // px threshold
+      });
+      for (const n of visible) { await renderPage(n, { keepScale: true }); }
+    }
+
+    fitWidthBtn.addEventListener('click', async () => {
+      const page = await pdf.getPage(currentPage);
+      scale = computeFitScale(page.getViewport({ scale: 1 }));
+      await rerenderVisible();
+    });
+
+    zoomInBtn.addEventListener('click', async () => {
+      scale = Math.min(scale * 1.2, MAX_SCALE);
+      await rerenderVisible();
+    });
+
+    zoomOutBtn.addEventListener('click', async () => {
+      scale = Math.max(scale / 1.2, MIN_SCALE);
+      await rerenderVisible();
+    });
+
+    goToInput.addEventListener('change', () => {
+      const n = Math.min(Math.max(parseInt(goToInput.value || '1', 10), 1), pdf.numPages);
+      scrollToPage(n);
+    });
+
+    // Resize: recompute fit scale + rerender visible (debounced)
+    let resizeT = 0;
+    window.addEventListener('resize', async () => {
+      clearTimeout(resizeT);
+      resizeT = setTimeout(async () => {
+        const page = await pdf.getPage(currentPage);
+        const v1 = page.getViewport({ scale: 1 });
+        const newFit = computeFitScale(v1);
+        // Only adjust scale automatically if we were basically in fit mode
+        if (Math.abs(newFit - scale) / scale > 0.04) {
+          scale = newFit;
+          await rerenderVisible();
+        }
+      }, 120);
+    });
+
+    // Thumbs toggle
+    toggleThumbsBtn.addEventListener('click', () => {
+      thumbs.classList.toggle('collapsed');
+    });
+
+    // ===== Boot =====
+    (async function start() {
+      const loading = pdfjsLib.getDocument({ url: PDF_URL });
+      pdf = await loading.promise;
+      pageCountSpan.textContent = `/ ${pdf.numPages}`;
+
+      // Create initial few containers near top; observe all
+      const PRE_CREATE = 8;
+      for (let n = 1; n <= pdf.numPages; n++) {
+        if (n <= PRE_CREATE) ensurePageContainer(n);
+        observePage(n);
+        observeThumb(n);
+      }
+
+      // Initial render will auto-fit
+      await renderPage(1, { keepScale: false });
+      setActivePage(1);
+      // Preload the next page lightly
+      renderPage(2, { keepScale: true });
+    })();
+</script>
