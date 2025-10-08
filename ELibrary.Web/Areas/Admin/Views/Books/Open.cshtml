@@ -1,23 +1,29 @@
 ﻿@{
     // The PDF you want to display (served by your controller)
-    var pdfUrl = Url.Action("Pdf", "Books", new { fileName = ViewData["FileName"] });
+    var pdfUrl = Url.Action("Pdf", "Books", new { area = "", fileName = ViewData["FileName"] });
 }
 
 <div class="pdf-shell">
-    <div class="pdf-toolbar">
-        <button id="btnPrev" type="button" aria-label="Previous page">◀</button>
+    <div class="pdf-toolbar rounded-1 mx-1">
+        <button id="btnPrev" class="btn btn-sm btn-outline-secondary" type="button" aria-label="Previous page"><</button>
         <span>
-            <input id="pageNumber" type="number" min="1" value="1" style="width:4rem"> /
+            <input id="pageNumber" class="form-control-sm border-1 border-secondary d-inline-block" type="number" min="1" value="1" style="width:4rem"> /
             <span id="pageCount">–</span>
         </span>
-        <button id="btnNext" type="button" aria-label="Next page">▶</button>
+        <button id="btnNext" class="btn btn-sm btn-outline-secondary" type="button" aria-label="Next page">></button>
         <span class="spacer"></span>
-        <button id="btnZoomOut" type="button">−</button>
-        <button id="btnZoomIn" type="button">+</button>
-        <button id="btnFit" type="button">Fit width</button>
+        <button id="btnZoomOut" class="btn btn-outline-secondary btn-sm" type="button">
+            <i class="fa-solid fa-magnifying-glass-minus"></i>
+            </button>
+        <button id="btnZoomIn" class="btn btn-outline-secondary btn-sm" type="button">
+            <i class="fa-solid fa-magnifying-glass-plus"></i>
+        </button>
+        <button id="btnFit" class="btn btn-outline-secondary btn-sm" type="button">
+            <i class="fa-solid fa-expand"></i>
+        </button>
     </div>
 
-    <div id="canvasWrap">
+    <div id="canvasWrap" class="bg-white">
         <canvas id="pdfCanvas"></canvas>
     </div>
 </div>
@@ -31,6 +37,7 @@
 </style>
 
 @section Scripts{
+    <partial name="_FontAwesomePArtial" />
     <script type="module">
         import * as pdfjsLib from '/lib/pdf.js/pdf.mjs';
         pdfjsLib.GlobalWorkerOptions.workerSrc = '/lib/pdf.js/pdf.worker.mjs';

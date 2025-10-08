@@ -44,18 +44,6 @@ namespace ELibrary.Web.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpGet("admin/books/pdf/{fileName}")]
-        public async Task<IActionResult> Pdf(string fileName)
-        {
-            if(fileName is null)
-            {
-                return NotFound();
-            }
-
-            var stream = await _azureBlobService.OpenReadAsync(fileName);
-            return File(stream, "application/pdf", enableRangeProcessing: true);
-        }
-
         [HttpGet]
         public IActionResult Add()
         {
