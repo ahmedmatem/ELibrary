@@ -39,21 +39,21 @@
             </div>
 
             <div class="col-md-6">
-                <label asp-for="File" class="form-label">Тип ресурс</label>
+                <label asp-for="File" class="form-label"></label>
                 <input asp-for="File" class="form-select" />
                 <small class="text-muted">Напр. Електронна книга, Аудиокнига, Списание…</small>
                 <span asp-validation-for="File" class="text-danger"></span>
             </div>
 
             <div class="col-md-6">
-                <label asp-for="CoverImageFile" class="form-label">Тип ресурс</label>
+                <label asp-for="CoverImageFile" class="form-label"></label>
                 <input asp-for="CoverImageFile" class="form-select" />
                 <small class="text-muted">Напр. Електронна книга, Аудиокнига, Списание…</small>
                 <span asp-validation-for="CoverImageFile" class="text-danger"></span>
             </div>
 
             <div class="col-md-6">
-                <label asp-for="Type" class="form-label">Формат</label>
+                <label asp-for="Type" class="form-label"></label>
                 <select asp-for="Type" class="form-select"
                         asp-items="Html.GetEnumSelectList<ELibrary.Infrastructure.Data.Types.ResourceType>()">
                     <option value="">— Избери —</option>
@@ -63,7 +63,7 @@
             </div>
 
             <div class="col-md-12">
-                <label asp-for="Description" class="form-label">Описание</label>
+                <label asp-for="Description" class="form-label"></label>
                 <textarea asp-for="Description" class="form-control" rows="3"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
